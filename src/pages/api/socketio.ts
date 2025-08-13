@@ -26,7 +26,8 @@ const ioHandler = (req: NextApiRequest, res: SocketWithIO) => {
       cors: {
         origin: "*",
         methods: ["GET", "POST"]
-      }
+      },
+      transports: ['polling', 'websocket']
     });
     
     res.socket.server.io = io;

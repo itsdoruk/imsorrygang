@@ -4,23 +4,10 @@ import { notificationService } from '../services/notificationService';
 export default function Home() {
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     // Request notification permission
     notificationService.requestNotificationPermission();
-
-    // Check connection status
-    const checkConnection = () => {
-      // This is a simple way to check if the socket is connected
-      setIsConnected(true); // You can implement a more robust connection check
-    };
-
-    checkConnection();
-
-    return () => {
-      notificationService.disconnect();
-    };
   }, []);
 
   const handleSendNotification = () => {
@@ -35,7 +22,7 @@ export default function Home() {
       roomId: 'default',
     };
 
-    // Send notification
+    // Send notification via API (this will work even if WebSocket fails)
     notificationService.sendNotification(notificationData);
 
     // Clear form
@@ -63,12 +50,6 @@ export default function Home() {
           <p className="text-lg">
             so you can leave a message on my phone
           </p>
-          <div className="flex items-center justify-center mt-6 space-x-3">
-            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-black' : 'bg-gray-400'}`}></div>
-            <span className="text-sm text-gray-600">
-              {isConnected ? 'connected' : 'disconnected'}
-            </span>
-          </div>
         </div>
 
         {/* Main Form */}
@@ -96,7 +77,7 @@ export default function Home() {
               onKeyPress={handleKeyPress}
               rows={4}
               className="w-full px-3 py-2 border border-black bg-white text-black focus:outline-none focus:ring-2 focus:ring-black resize-none"
-              placeholder="write your message here... (ctrl+enter to send)"
+              placeholder="write your message here..."
             />
           </div>
 
